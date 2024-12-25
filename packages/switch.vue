@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'is-checked': props.modelValue }"
+    :class="{ 'is-checked': modelValue }"
     class="sjc-switch"
     @click="handleclick"
   >
@@ -11,45 +11,46 @@
   </div>
 </template>
 
-<script setup name="switch">
-import { defineProps, defineEmits, onMounted, nextTick } from "vue"
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false
+<script>
+export default {
+  name: 'SjcSwitch',
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: false
+    },
+    activeColor: {
+      type: String,
+      default: ''
+    },
+    inactiveColor: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    }
   },
-  activeColor: {
-    type: String,
-    default: ""
+  mounted () {
+    this.setColor()
+    document.querySelector('.sjc-switch__input').checked = this.modelValue
   },
-  inactiveColor: {
-    type: String,
-    default: ""
-  },
-  name: {
-    type: String,
-    default: ""
-  }
-})
-onMounted(() => {
-  setColor()
-  document.querySelector(".sjc-switch__input").checked = props.modelValue
-})
-const emit = defineEmits(["update:modelValue"])
-const handleclick = async () => {
-  emit("update:modelValue", !props.modelValue)
-  // 更新颜色切换
-  await nextTick(() => {
-    setColor()
-  })
-}
-const setColor = (color) => {
-  if (props.activeColor || props.inactiveColor) {
-    const color = props.modelValue ? props.activeColor : props.inactiveColor
-    console.log(color)
-    document.querySelector(".sjc-switch__core").style.backgroundColor = color
-    document.querySelector(".sjc-switch__button").style.borderColor = color
-    document.querySelector(".sjc-switch__input").checked = props.modelValue
+  methods: {
+    handleclick () {
+      this.$emit('update:modelValue', !this.modelValue)
+      this.$nextTick(() => {
+        this.setColor()
+      })
+    },
+    setColor () {
+      if (this.activeColor || this.inactiveColor) {
+        const color = this.modelValue ? this.activeColor : this.inactiveColor
+        document.querySelector('.sjc-switch__core').style.backgroundColor = color
+        document.querySelector('.sjc-switch__button').style.borderColor = color
+        document.querySelector('.sjc-switch__input').checked = this.modelValue
+      }
+    }
   }
 }
 </script>

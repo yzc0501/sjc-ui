@@ -1,26 +1,30 @@
 <template>
   <div class="sjc-form-item" :style="labelStyle">
-    <label class="sjc-form-item__label">{{props.label}}</label>
+    <label class="sjc-form-item__label">{{label}}</label>
     <div class="sjc-form-item__content">
       <slot></slot>
     </div>
   </div>
 </template>
 
-<script setup name="sjc-form-item">
-import { defineProps, inject, computed } from 'vue'
-
-const props = defineProps({
-  label: {
-    type: String,
-    default: ''
+<script>
+export default {
+  name: 'SjcFormItem',
+  props: {
+    label: String,
+    prop: String
+  },
+  data () {
+    return {
+      errorMessage: ''
+    }
+  },
+  methods: {
+    validate () {
+      // 验证逻辑
+    }
   }
-})
-const formKey = inject('formKey')
-const labelStyle = computed(() => ({
-  width: formKey.labelWidth
-}))
-console.log(labelStyle.value)
+}
 </script>
 
 <style lang="scss">

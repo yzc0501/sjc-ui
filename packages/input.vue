@@ -1,61 +1,47 @@
 <template>
-  <div class="sjc-input" :class="{ 'sjc-input_suffix': props.clearable || props.showPassword }">
+  <div class="sjc-input" :class="{ 'sjc-input_suffix': clearable || showPassword }">
     <input
       class="sjc-input_inner"
-      :class="{ 'is-disabled': props.disabled } "
-      :type="props.showPassword ? (passwordVisible ? 'text' : 'password') : props.type"
-      :placeholder="props.placeholder"
-      :disabled="props.disabled"
+      :class="{ 'is-disabled': disabled }"
+      :type="showPassword ? (passwordVisible ? 'text' : 'password') : type"
+      :placeholder="placeholder"
+      :disabled="disabled"
       @input="handleInput"
-      :value="props.modelValue"
+      :value="modelValue"
     >
   <span class="sjc-input_suffix" >
-   <i class="sjc-input_icon sjc-icon-guanbi" v-if="props.clearable && props.modelValue" @click="clear"></i>
-   <i class="sjc-input_icon sjc-icon-yanjing" v-if="props.showPassword && props.modelValue" :class="{'sjc-input_icon_active': passwordVisible}" @click="handlePassword"></i>
+   <i class="sjc-input_icon sjc-icon-guanbi" v-if="clearable && modelValue" @click="clear"></i>
+   <i class="sjc-input_icon sjc-icon-yanjing" v-if="showPassword && modelValue" :class="{'sjc-input_icon_active': passwordVisible}" @click="handlePassword"></i>
  </span>
   </div>
 </template>
 
-<script setup name="input">
-import { defineProps, defineEmits, computed, ref } from 'vue'
-const passwordVisible = ref(false)
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: ''
+<script>
+export default {
+  name: 'SjcInput',
+  props: {
+    modelValue: {
+      type: [String, Number],
+      default: ''
+    },
+    type: {
+      type: String,
+      default: 'text'
+    },
+    placeholder: String,
+    disabled: Boolean,
+    clearable: Boolean,
+    showPassword: Boolean
   },
-  type: {
-    type: String,
-    default: 'text'
-  },
-  placeholder: {
-    type: String,
-    default: ''
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  clearable: {
-    type: Boolean,
-    default: false
-  },
-  showPassword: {
-    type: Boolean,
-    default: false
+  methods: {
+    handleInput (e) {
+      this.$emit('update:modelValue', e.target.value)
+    },
+    handleClear () {
+      this.$emit('update:modelValue', '')
+    }
   }
-})
-const emit = defineEmits(['update:modelValue'])
-const handleInput = (e) => {
-  emit('update:modelValue', e.target.value)
 }
-const showSuffix = computed(() => {
-  return props.type === 'password'
-})
-const handlePassword = () => {
-  passwordVisible.value = !passwordVisible.value
-}
-console.log(showSuffix.value)
 </script>
 
 <style lang="scss" scoped>

@@ -28,14 +28,21 @@
     </div>
   </transition>
 </template>
-<script setup name="dialog">
-import { defineProps, defineEmits } from 'vue'
-const props = defineProps(['title', 'width', 'top', 'footer', 'modelValue'])
-console.log(props)
-const emit = defineEmits(['update:modelValue'])
-const handleClose = () => {
-  console.log(props.modelValue)
-  emit('update:modelValue', false)
+<script>
+export default {
+  name: 'SjcDialog',
+  props: {
+    title: String,
+    width: String,
+    top: String,
+    footer: Boolean,
+    modelValue: Boolean
+  },
+  methods: {
+    handleClose () {
+      this.$emit('update:modelValue', false)
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -1,13 +1,13 @@
 <template>
   <label
     class="sjc-radio"
-    :class="{ 'is-checked': props.label === model }"
+    :class="{ 'is-checked': label === model }"
   >
     <span class="sjc-radio__input">
       <span class="sjc-radio__inner"></span>
       <input
         class="sjc-radio__original"
-        :value="props.label"
+        :value="label"
         :name="name"
         type="radio"
         v-model="model"
@@ -20,41 +20,25 @@
   </label>
 </template>
 
-<script setup>
-import { computed, defineProps, defineEmits, inject } from "vue"
-
-const radioGroup = inject("radioGroupKey", null)
-const emit = defineEmits(["update:modelValue"])
-
-const props = defineProps({
-  label: {
-    type: [String, Number, Boolean],
-    default: ""
+<script>
+export default {
+  name: 'SjcRadio',
+  props: {
+    modelValue: {
+      type: [String, Number, Boolean],
+      default: ''
+    },
+    label: {
+      type: [String, Number, Boolean],
+      required: true
+    }
   },
-  modelValue: {
-    type: String,
-    default: ""
-  },
-  name: {
-    type: String,
-    default: ""
-  }
-})
-
-const isGroup = computed(() => radioGroup !== null)
-
-const model = computed({
-  get () {
-    return isGroup.value ? radioGroup.modelValue.value : props.modelValue
-  },
-  set (value) {
-    if (isGroup.value) {
-      radioGroup.changeEvent(value)
-    } else {
-      emit("update:modelValue", value)
+  methods: {
+    handleChange () {
+      this.$emit('update:modelValue', this.label)
     }
   }
-})
+}
 </script>
 
 <style lang="scss" scoped>

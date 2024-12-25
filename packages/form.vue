@@ -4,23 +4,22 @@
   </div>
 </template>
 
-<script setup name="sjc-form">
-import { defineProps, provide } from 'vue'
-
-const props = defineProps({
-  model: {
-    type: Object,
-    required: true
+<script>
+export default {
+  name: 'SjcForm',
+  props: {
+    model: {
+      type: Object,
+      required: true
+    },
+    rules: Object
   },
-  labelWidth: {
-    type: String,
-    default: '100px'
+  methods: {
+    validate (callback) {
+      // 验证逻辑
+    }
   }
-})
-provide('formKey', {
-  model: props.model,
-  labelWidth: props.labelWidth
-})
+}
 </script>
 
 <style>

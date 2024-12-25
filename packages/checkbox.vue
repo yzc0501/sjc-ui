@@ -16,44 +16,60 @@
   </label>
 </template>
 
-<script setup>
-import { computed, defineProps, defineEmits, inject } from 'vue'
-
-const props = defineProps({
-  modelValue: {
-    type: [Boolean, Array],
-    default: false
+<script>
+export default {
+  name: 'SjcCheckbox',
+  inject: {
+    CheckboxGroup: {
+      default: null
+    }
   },
-  label: {
-    type: String,
-    default: ''
-  }
-})
-
-const emit = defineEmits(['update:modelValue'])
-const checkboxGroup = inject('checkboxGroupKey', null)
-
-const isGroup = computed(() => checkboxGroup !== null)
-
-const model = computed({
-  get () {
-    return isGroup.value ? checkboxGroup.modelValue.value : props.modelValue
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: false
+    },
+    label: {
+      type: [String, Number, Boolean],
+      default: ''
+    }
   },
-  set (value) {
-    if (isGroup.value) {
-      checkboxGroup.changeEvent(value)
-    } else {
-      emit('update:modelValue', value)
+  computed: {
+    model: {
+      get () {
+        if (this.isGroup) {
+          return this.CheckboxGroup.modelValue.includes(this.label)
+        }
+        return this.modelValue
+      },
+      set (value) {
+        if (this.isGroup) {
+          const values = [...this.CheckboxGroup.modelValue]
+          const index = values.indexOf(this.label)
+          if (value && index === -1) {
+            // 选中且不在数组中，添加
+            values.push(this.label)
+          } else if (!value && index > -1) {
+            // 取消选中且在数组中，移除
+            values.splice(index, 1)
+          }
+          this.CheckboxGroup.$emit('update:modelValue', values)
+        } else {
+          this.$emit('update:modelValue', value)
+        }
+      }
+    },
+    isGroup () {
+      return !!this.CheckboxGroup
+    },
+    isChecked () {
+      if (this.isGroup) {
+        return this.CheckboxGroup.modelValue.includes(this.label)
+      }
+      return this.model
     }
   }
-})
-
-const isChecked = computed(() => {
-  if (isGroup.value) {
-    return model.value.includes(props.label)
-  }
-  return model.value
-})
+}
 </script>
 
 <style lang="scss" scoped>
