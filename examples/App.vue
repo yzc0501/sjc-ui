@@ -7,6 +7,7 @@
     <sjc-checkbox label="选项3" />
   </sjc-checkbox-group>
   <sjc-checkbox v-model="dialogVisible" label="选项1" />
+  <h1>测试SSH</h1>
 </template>
 
 <script setup>
